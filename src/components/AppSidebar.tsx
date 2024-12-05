@@ -9,6 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 
 const AppSidebar = () => {
@@ -50,6 +51,7 @@ const AppSidebar = () => {
             ))}
           </SidebarMenu>
         </SidebarContent>
+        <SidebarRail />
       </Sidebar>
       <div className="fixed top-4 left-4 z-50 md:hidden">
         <SidebarTrigger />
