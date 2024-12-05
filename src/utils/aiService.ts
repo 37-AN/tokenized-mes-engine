@@ -1,4 +1,9 @@
-import { pipeline, TextClassificationOutput } from "@huggingface/transformers";
+import { pipeline } from "@huggingface/transformers";
+
+interface ClassificationResult {
+  label: string;
+  score: number;
+}
 
 interface AnomalyDetectionResult {
   isAnomaly: boolean;
@@ -29,7 +34,7 @@ export const aiService = {
                           Vibration: ${metrics.vibration}, 
                           Power Usage: ${metrics.power_usage}kW`;
       
-      const result = await classifier(metricsText);
+      const result = await classifier(metricsText) as ClassificationResult | ClassificationResult[];
       console.log('Anomaly detection result:', result);
       
       // Handle array or single result
@@ -62,7 +67,7 @@ export const aiService = {
                            Runtime hours: ${machineData.runtime}, 
                            Performance trend: ${machineData.performanceTrend}`;
       
-      const result = await classifier(analysisText);
+      const result = await classifier(analysisText) as ClassificationResult | ClassificationResult[];
       console.log('Maintenance prediction result:', result);
 
       // Handle array or single result
