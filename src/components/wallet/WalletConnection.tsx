@@ -6,16 +6,25 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42] // Supported networks (1 is mainnet)
+  supportedChainIds: [1, 3, 4, 5, 42]
 });
 
-function getLibrary(provider: any) {
-  return new Web3Provider(provider);
+function getLibrary(provider: any): Web3Provider {
+  const library = new Web3Provider(provider);
+  library.pollingInterval = 12000;
+  return library;
 }
 
 function WalletStatus() {
-  const { active, account, activate, deactivate } = useWeb3React();
+  const context = useWeb3React<Web3Provider>();
+  const { connector, library, account, activate, deactivate, active, error } = context;
   const [balance, setBalance] = useState<string>('0');
   const { toast } = useToast();
 
@@ -25,12 +34,18 @@ function WalletStatus() {
         try {
           const provider = new Web3Provider(window.ethereum);
           const balance = await provider.getBalance(account);
-          setBalance(parseFloat(balance.toString()) / 1e18 + ' ETH');
+          setBalance((parseFloat(balance.toString()) / 1e18).toFixed(4) + ' ETH');
         } catch (error) {
           console.error('Error fetching balance:', error);
+          toast({
+            title: "Error",
+            description: "Failed to fetch balance",
+            variant: "destructive",
+          });
         }
       }
     };
+    
     getBalance();
   }, [active, account]);
 
@@ -60,8 +75,33 @@ function WalletStatus() {
       });
     } catch (error) {
       console.error('Error disconnecting wallet:', error);
+      toast({
+        title: "Error",
+        description: "Failed to disconnect wallet",
+        variant: "destructive",
+      });
     }
   };
+
+  // If wallet is not detected
+  if (!window.ethereum) {
+    return (
+      <Card className="p-6 max-w-md mx-auto">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold">Wallet Status</h2>
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <span className="text-sm">No Wallet</span>
+            </div>
+          </div>
+          <p className="text-sm text-gray-600">
+            Please install MetaMask or another Web3 wallet to continue.
+          </p>
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card className="p-6 max-w-md mx-auto">
