@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Cog, Server, Wrench } from "lucide-react";
+import { Cog, Server } from "lucide-react";
 import { useState } from "react";
 import { generateMachineToken } from "@/utils/tokenization";
 import { useToast } from "@/components/ui/use-toast";
 import Navigation from "@/components/Navigation";
 import { AddMachineDialog } from "@/components/machines/AddMachineDialog";
+import { ConfigureMachineDialog } from "@/components/machines/ConfigureMachineDialog";
 import { machineService, type Machine } from "@/services/machineService";
 import { useQuery } from "@tanstack/react-query";
 import { sql } from "@/lib/db";
@@ -44,7 +45,7 @@ const MachineSetup = () => {
     }
   };
 
-  const handleMachineAdded = () => {
+  const handleMachineUpdated = () => {
     refetch();
   };
 
@@ -53,7 +54,7 @@ const MachineSetup = () => {
       <Navigation />
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Machine Setup</h1>
-        <AddMachineDialog onMachineAdded={handleMachineAdded} />
+        <AddMachineDialog onMachineAdded={handleMachineUpdated} />
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -88,10 +89,10 @@ const MachineSetup = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" className="w-full gap-2">
-                    <Wrench className="h-4 w-4" />
-                    Configure
-                  </Button>
+                  <ConfigureMachineDialog 
+                    machine={machine}
+                    onMachineUpdated={handleMachineUpdated}
+                  />
                   <Button 
                     variant="outline" 
                     size="sm" 
