@@ -1,4 +1,4 @@
-import { pipeline } from "@huggingface/transformers";
+import { pipeline, TextClassificationOutput } from "@huggingface/transformers";
 
 interface AnomalyDetectionResult {
   isAnomaly: boolean;
@@ -32,11 +32,14 @@ export const aiService = {
       const result = await classifier(metricsText);
       console.log('Anomaly detection result:', result);
       
+      // Handle array or single result
+      const classification = Array.isArray(result) ? result[0] : result;
+      
       // Interpret classification results
-      const isAnomaly = result[0].label === 'NEGATIVE';
+      const isAnomaly = classification.label === 'NEGATIVE';
       return {
         isAnomaly,
-        confidence: result[0].score,
+        confidence: classification.score,
         details: isAnomaly ? 'Potential anomaly detected in machine behavior' : 'Machine operating within normal parameters'
       };
     } catch (error) {
@@ -62,15 +65,18 @@ export const aiService = {
       const result = await classifier(analysisText);
       console.log('Maintenance prediction result:', result);
 
+      // Handle array or single result
+      const classification = Array.isArray(result) ? result[0] : result;
+
       // Calculate next maintenance date based on analysis
-      const daysToAdd = result[0].label === 'NEGATIVE' ? 7 : 30;
+      const daysToAdd = classification.label === 'NEGATIVE' ? 7 : 30;
       const nextMaintenanceDate = new Date();
       nextMaintenanceDate.setDate(nextMaintenanceDate.getDate() + daysToAdd);
 
       return {
         nextMaintenanceDate,
-        urgency: result[0].label === 'NEGATIVE' ? 'high' : 'low',
-        confidence: result[0].score,
+        urgency: classification.label === 'NEGATIVE' ? 'high' : 'low',
+        confidence: classification.score,
         recommendations: [
           'Inspect machine components',
           'Check for wear and tear',
