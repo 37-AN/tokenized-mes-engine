@@ -48,8 +48,8 @@ const MachineAnalysis = () => {
   return (
     <div className="container mx-auto p-6 space-y-6">
       <Navigation />
-      <header className="flex justify-between items-center mb-8 px-1">
-        <div className="space-y-1">
+      <header className="flex justify-between items-center mb-8">
+        <div className="flex-1 text-center">
           <h1 className="text-3xl font-bold">Machine Analysis</h1>
           <p className="text-muted-foreground">Comprehensive machine health monitoring and diagnostics</p>
         </div>
