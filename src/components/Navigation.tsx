@@ -1,6 +1,6 @@
 import { ChevronLeft, Menu, Database } from "lucide-react";
 import { Button } from "./ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -8,9 +8,20 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
 
 const Navigation = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
     { name: "Production Management", path: "/production-management" },
@@ -21,18 +32,49 @@ const Navigation = () => {
     { name: "Database Records", path: "/database-view", icon: <Database className="mr-2 h-4 w-4" /> },
   ];
 
-  console.log("Navigation component rendered");
+  console.log("Navigation component rendered, current path:", location.pathname);
 
   return (
     <div className="flex justify-between items-center w-full mb-6">
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => navigate(-1)}
-        className="hover:bg-secondary"
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </Button>
+      <div className="flex items-center gap-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate(-1)}
+          className="hover:bg-secondary"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </Button>
+
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>Pages</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                  {menuItems.map((item) => (
+                    <li key={item.path}>
+                      <NavigationMenuLink asChild>
+                        <Button
+                          variant="ghost"
+                          className={cn(
+                            "w-full justify-start",
+                            location.pathname === item.path && "bg-accent"
+                          )}
+                          onClick={() => navigate(item.path)}
+                        >
+                          {item.icon}
+                          {item.name}
+                        </Button>
+                      </NavigationMenuLink>
+                    </li>
+                  ))}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
 
       <Sheet>
         <SheetTrigger asChild>
@@ -49,7 +91,10 @@ const Navigation = () => {
               <Button
                 key={item.path}
                 variant="ghost"
-                className="w-full justify-start"
+                className={cn(
+                  "w-full justify-start",
+                  location.pathname === item.path && "bg-accent"
+                )}
                 onClick={() => {
                   navigate(item.path);
                   console.log(`Navigating to ${item.path}`);
