@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartArea, ChartBar, ChartLine, ChartPie } from "lucide-react";
 import { ResponsiveContainer, LineChart, Line, AreaChart, Area, PieChart, Pie, XAxis, YAxis, Tooltip, CartesianGrid, Cell } from 'recharts';
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
+import Navigation from "@/components/Navigation";
 
 const AnalyticsView = () => {
   const lineData = [
@@ -33,6 +34,7 @@ const AnalyticsView = () => {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      <Navigation />
       <h1 className="text-3xl font-bold">Analytics</h1>
 
       <div className="grid lg:grid-cols-2 gap-6">

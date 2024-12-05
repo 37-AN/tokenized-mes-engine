@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, CheckCircle, AlertTriangle } from "lucide-react";
+import Navigation from "@/components/Navigation";
 
 const SystemStatus = () => {
   const systems = [
@@ -10,6 +11,7 @@ const SystemStatus = () => {
 
   return (
     <div className="min-h-screen p-8 animate-in">
+      <Navigation />
       <header className="max-w-5xl mx-auto text-center mb-8">
         <h1 className="text-4xl font-bold tracking-tight mb-4">System Status</h1>
         <p className="text-lg text-muted-foreground">Real-time system monitoring and health status</p>

@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Box, Clock } from "lucide-react";
+import Navigation from "@/components/Navigation";
 
 const ActiveProducts = () => {
   const products = [
@@ -11,6 +12,7 @@ const ActiveProducts = () => {
 
   return (
     <div className="min-h-screen p-8 animate-in">
+      <Navigation />
       <header className="max-w-5xl mx-auto text-center mb-8">
         <h1 className="text-4xl font-bold tracking-tight mb-4">Active Products</h1>
         <p className="text-lg text-muted-foreground">Currently active products in the production line</p>

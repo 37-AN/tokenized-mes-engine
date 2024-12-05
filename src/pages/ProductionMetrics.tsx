@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import Navigation from "@/components/Navigation";
 
 const ProductionMetrics = () => {
   const data = [
@@ -13,6 +14,7 @@ const ProductionMetrics = () => {
 
   return (
     <div className="min-h-screen p-8 animate-in">
+      <Navigation />
       <header className="max-w-5xl mx-auto text-center mb-8">
         <h1 className="text-4xl font-bold tracking-tight mb-4">Production Metrics</h1>
         <p className="text-lg text-muted-foreground">Performance analytics and production data</p>

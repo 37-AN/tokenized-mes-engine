@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartBarBig, ChartLine, Calendar, List } from "lucide-react";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
+import Navigation from "@/components/Navigation";
 
 const ProductionManagement = () => {
   const productionData = [
@@ -16,6 +17,7 @@ const ProductionManagement = () => {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      <Navigation />
       <h1 className="text-3xl font-bold">Production Management</h1>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">

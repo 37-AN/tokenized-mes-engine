@@ -5,6 +5,7 @@ import { Cog, Server, Wrench } from "lucide-react";
 import { useState } from "react";
 import { generateMachineToken } from "@/utils/tokenization";
 import { useToast } from "@/components/ui/use-toast";
+import Navigation from "@/components/Navigation";
 
 const MachineSetup = () => {
   const { toast } = useToast();
@@ -51,6 +52,7 @@ const MachineSetup = () => {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      <Navigation />
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Machine Setup</h1>
         <Button className="gap-2">
