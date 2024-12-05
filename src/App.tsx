@@ -8,6 +8,7 @@ import SystemAlerts from "./pages/SystemAlerts";
 import ActiveProducts from "./pages/ActiveProducts";
 import DatabaseView from "./pages/DatabaseView";
 import AnalyticsView from "./pages/AnalyticsView";
+import ProductionMetrics from "./pages/ProductionMetrics";
 import "./App.css";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="/active-products" element={<ActiveProducts />} />
         <Route path="/database" element={<DatabaseView />} />
         <Route path="/analytics" element={<AnalyticsView />} />
+        <Route path="/production-metrics" element={<ProductionMetrics />} />
       </Routes>
     </Router>
   );
