@@ -3,21 +3,18 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { sql } from "@/lib/db";
 import { Machine } from "@/services/machineService";
 import { aiService } from "@/utils/aiService";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AiAnomalyAlert } from "./ai-insights/AiAnomalyAlert";
+import { MaintenancePredictionAlert } from "./ai-insights/MaintenancePredictionAlert";
+import { MachineConfigForm } from "./configuration/MachineConfigForm";
 
 interface ConfigureMachineDialogProps {
   machine: Machine;
@@ -121,69 +118,26 @@ export function ConfigureMachineDialog({ machine, onMachineUpdated }: ConfigureM
         </DialogHeader>
         
         {aiInsights?.anomalyResult?.isAnomaly && (
-          <Alert variant="destructive" className="mb-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Anomaly Detected</AlertTitle>
-            <AlertDescription>
-              {aiInsights.anomalyResult.details}
-            </AlertDescription>
-          </Alert>
+          <AiAnomalyAlert details={aiInsights.anomalyResult.details} />
         )}
 
         {aiInsights?.maintenancePrediction && (
-          <Alert className="mb-4">
-            <AlertTitle>Maintenance Prediction</AlertTitle>
-            <AlertDescription>
-              Next maintenance recommended by: {new Date(aiInsights.maintenancePrediction.nextMaintenanceDate).toLocaleDateString()}
-              <br />
-              Urgency: {aiInsights.maintenancePrediction.urgency}
-              <br />
-              Confidence: {(aiInsights.maintenancePrediction.confidence * 100).toFixed(1)}%
-            </AlertDescription>
-          </Alert>
+          <MaintenancePredictionAlert
+            nextMaintenanceDate={aiInsights.maintenancePrediction.nextMaintenanceDate}
+            urgency={aiInsights.maintenancePrediction.urgency}
+            confidence={aiInsights.maintenancePrediction.confidence}
+          />
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Machine Name</Label>
-            <Input
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter machine name"
-              className="bg-white"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="status">Status</Label>
-            <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger className="w-full bg-white">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="Inactive">Inactive</SelectItem>
-                <SelectItem value="Maintenance">Maintenance</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="maintenance">Maintenance Status</Label>
-            <Select value={maintenanceStatus} onValueChange={setMaintenanceStatus}>
-              <SelectTrigger className="w-full bg-white">
-                <SelectValue placeholder="Select maintenance status" />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                <SelectItem value="Up to date">Up to date</SelectItem>
-                <SelectItem value="Pending">Pending</SelectItem>
-                <SelectItem value="Overdue">Overdue</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <DialogFooter>
-            <Button type="submit">Save changes</Button>
-          </DialogFooter>
-        </form>
+        <MachineConfigForm
+          name={name}
+          status={status}
+          maintenanceStatus={maintenanceStatus}
+          onNameChange={setName}
+          onStatusChange={setStatus}
+          onMaintenanceStatusChange={setMaintenanceStatus}
+          onSubmit={handleSubmit}
+        />
       </DialogContent>
     </Dialog>
   );
