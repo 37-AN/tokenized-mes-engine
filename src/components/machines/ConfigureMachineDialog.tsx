@@ -80,15 +80,16 @@ export function ConfigureMachineDialog({ machine, onMachineUpdated }: ConfigureM
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter machine name"
+              className="bg-white"
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="status">Status</Label>
             <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full bg-white">
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 <SelectItem value="Active">Active</SelectItem>
                 <SelectItem value="Inactive">Inactive</SelectItem>
                 <SelectItem value="Maintenance">Maintenance</SelectItem>
@@ -98,10 +99,10 @@ export function ConfigureMachineDialog({ machine, onMachineUpdated }: ConfigureM
           <div className="space-y-2">
             <Label htmlFor="maintenance">Maintenance Status</Label>
             <Select value={maintenanceStatus} onValueChange={setMaintenanceStatus}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full bg-white">
                 <SelectValue placeholder="Select maintenance status" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 <SelectItem value="Up to date">Up to date</SelectItem>
                 <SelectItem value="Pending">Pending</SelectItem>
                 <SelectItem value="Overdue">Overdue</SelectItem>
