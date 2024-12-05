@@ -6,12 +6,18 @@ import ProductionTab from "@/components/dashboard/ProductionTab";
 import ManagementTab from "@/components/dashboard/ManagementTab";
 import DashboardAnalytics from "@/components/dashboard/DashboardAnalytics";
 import AppSidebar from "@/components/AppSidebar";
+import { WalletConnection } from "@/components/wallet/WalletConnection";
+import ProductionMonitor from "@/components/production/ProductionMonitor";
 
 const Index = () => {
   return (
     <div className="flex min-h-screen">
       <AppSidebar />
       <div className="flex-1 p-8 animate-in">
+        <div className="mb-8">
+          <WalletConnection />
+        </div>
+        
         <DashboardAnalytics />
         
         <div className="mt-8">
@@ -32,7 +38,10 @@ const Index = () => {
             </TabsContent>
 
             <TabsContent value="production" className="space-y-6">
-              <ProductionTab />
+              <div className="space-y-8">
+                <ProductionTab />
+                <ProductionMonitor />
+              </div>
             </TabsContent>
 
             <TabsContent value="management" className="space-y-6">
