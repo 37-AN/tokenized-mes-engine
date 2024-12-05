@@ -1,4 +1,4 @@
-import { ChevronLeft, Menu } from "lucide-react";
+import { ChevronLeft, Menu, Database } from "lucide-react";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
 import {
@@ -18,7 +18,7 @@ const Navigation = () => {
     { name: "Production Metrics", path: "/production-metrics" },
     { name: "Active Products", path: "/active-products" },
     { name: "System Status", path: "/system-status" },
-    { name: "Database Records", path: "/database" },
+    { name: "Database Records", path: "/database", icon: <Database className="mr-2 h-4 w-4" /> },
   ];
 
   console.log("Navigation component rendered");
@@ -55,6 +55,7 @@ const Navigation = () => {
                   console.log(`Navigating to ${item.path}`);
                 }}
               >
+                {item.icon}
                 {item.name}
               </Button>
             ))}
