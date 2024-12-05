@@ -35,7 +35,7 @@ const Navigation = () => {
   console.log("Navigation component rendered, current path:", location.pathname);
 
   return (
-    <div className="flex justify-between items-center w-full mb-6">
+    <div className="flex justify-between items-center w-full mb-6 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 border-b">
       <div className="flex items-center gap-4">
         <Button
           variant="ghost"
@@ -49,9 +49,9 @@ const Navigation = () => {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>Pages</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="bg-background">Pages</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-background">
                   {menuItems.map((item) => (
                     <li key={item.path}>
                       <NavigationMenuLink asChild>
