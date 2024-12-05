@@ -1,57 +1,14 @@
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import MonitoringTab from "@/components/dashboard/MonitoringTab";
-import AlertsTab from "@/components/dashboard/AlertsTab";
-import ProductionTab from "@/components/dashboard/ProductionTab";
-import ManagementTab from "@/components/dashboard/ManagementTab";
-import DashboardAnalytics from "@/components/dashboard/DashboardAnalytics";
-import AppSidebar from "@/components/AppSidebar";
 import { WalletConnection } from "@/components/wallet/WalletConnection";
-import ProductionMonitor from "@/components/production/ProductionMonitor";
+import { TokenInteraction } from "@/components/token/TokenInteraction";
 
-const Index = () => {
+export default function Index() {
   return (
-    <div className="flex min-h-screen">
-      <AppSidebar />
-      <div className="flex-1 p-8 animate-in">
-        <div className="mb-8">
-          <WalletConnection />
-        </div>
-        
-        <DashboardAnalytics />
-        
-        <div className="mt-8">
-          <Tabs defaultValue="monitoring" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 gap-4">
-              <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
-              <TabsTrigger value="alerts">Alerts</TabsTrigger>
-              <TabsTrigger value="production">Production</TabsTrigger>
-              <TabsTrigger value="management">Management</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="monitoring" className="space-y-6">
-              <MonitoringTab />
-            </TabsContent>
-
-            <TabsContent value="alerts" className="space-y-6">
-              <AlertsTab />
-            </TabsContent>
-
-            <TabsContent value="production" className="space-y-6">
-              <div className="space-y-8">
-                <ProductionTab />
-                <ProductionMonitor />
-              </div>
-            </TabsContent>
-
-            <TabsContent value="management" className="space-y-6">
-              <ManagementTab />
-            </TabsContent>
-          </Tabs>
-        </div>
+    <div className="container mx-auto p-4 space-y-6">
+      <h1 className="text-2xl font-bold mb-6">Blockchain Dashboard</h1>
+      <div className="grid gap-6 md:grid-cols-2">
+        <WalletConnection />
+        <TokenInteraction />
       </div>
     </div>
   );
-};
-
-export default Index;
+}
