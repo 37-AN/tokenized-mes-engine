@@ -13,47 +13,40 @@ export default function Index() {
       <AppSidebar />
       <div className="flex-1 p-8 bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen">
         <div className="max-w-7xl mx-auto space-y-8">
-          <div className="text-center mb-10">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Manufacturing Dashboard</h1>
-            <p className="text-lg text-gray-600">Monitor and manage your production system</p>
-          </div>
+          <section className="space-y-6">
+            <h2 className="text-2xl font-semibold">Token Management</h2>
+            <div className="grid gap-8 md:grid-cols-2">
+              <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow">
+                <h3 className="text-xl font-semibold mb-4">Wallet Connection</h3>
+                <WalletConnection />
+              </Card>
 
-          <div className="space-y-8">
-            <section>
-              <h2 className="text-2xl font-semibold mb-6">Analytics Overview</h2>
-              <DashboardAnalytics />
-            </section>
+              <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow">
+                <h3 className="text-xl font-semibold mb-4">Token Operations</h3>
+                <TokenInteraction />
+              </Card>
+            </div>
+          </section>
 
-            <section className="space-y-6">
-              <h2 className="text-2xl font-semibold">System Monitoring</h2>
-              <MonitoringTab />
-            </section>
+          <section>
+            <h2 className="text-2xl font-semibold mb-6">Analytics Overview</h2>
+            <DashboardAnalytics />
+          </section>
 
-            <section className="space-y-6">
-              <h2 className="text-2xl font-semibold">Production Management</h2>
-              <ProductionTab />
-            </section>
+          <section className="space-y-6">
+            <h2 className="text-2xl font-semibold">System Monitoring</h2>
+            <MonitoringTab />
+          </section>
 
-            <section className="space-y-6">
-              <h2 className="text-2xl font-semibold">Management Tools</h2>
-              <ManagementTab />
-            </section>
+          <section className="space-y-6">
+            <h2 className="text-2xl font-semibold">Production Management</h2>
+            <ProductionTab />
+          </section>
 
-            <section className="space-y-6">
-              <h2 className="text-2xl font-semibold">Token Management</h2>
-              <div className="grid gap-8 md:grid-cols-2">
-                <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow">
-                  <h3 className="text-xl font-semibold mb-4">Wallet Connection</h3>
-                  <WalletConnection />
-                </Card>
-
-                <Card className="p-6 shadow-lg hover:shadow-xl transition-shadow">
-                  <h3 className="text-xl font-semibold mb-4">Token Operations</h3>
-                  <TokenInteraction />
-                </Card>
-              </div>
-            </section>
-          </div>
+          <section className="space-y-6">
+            <h2 className="text-2xl font-semibold">Management Tools</h2>
+            <ManagementTab />
+          </section>
         </div>
       </div>
     </div>
