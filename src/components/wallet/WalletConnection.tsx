@@ -23,52 +23,30 @@ function getLibrary(provider: any): Web3Provider {
 }
 
 function WalletStatus() {
-  const { connector, library, chainId, account, activate, deactivate, active, error } = useWeb3React<Web3Provider>();
+  const { active, account, library, activate, deactivate } = useWeb3React<Web3Provider>();
   const [balance, setBalance] = useState<string>('0');
   const { toast } = useToast();
+  const [isConnecting, setIsConnecting] = useState(false);
 
-  // Effect to handle initial connection status
+  // Effect to fetch balance when account changes
   useEffect(() => {
-    const connectWalletOnPageLoad = async () => {
-      if (window.ethereum) {
+    const fetchBalance = async () => {
+      if (active && account && library) {
         try {
-          await activate(injected);
-          console.log('Wallet auto-connected successfully');
-        } catch (error) {
-          console.error('Failed to auto-connect wallet:', error);
-        }
-      }
-    };
-    connectWalletOnPageLoad();
-  }, []);
-
-  // Effect to update balance when account changes
-  useEffect(() => {
-    console.log('Wallet status changed:', { active, account, chainId });
-    
-    const getBalance = async () => {
-      if (active && account && window.ethereum) {
-        try {
-          const provider = new Web3Provider(window.ethereum);
-          const balance = await provider.getBalance(account);
-          const formattedBalance = (parseFloat(balance.toString()) / 1e18).toFixed(4) + ' ETH';
-          console.log('Updated balance:', formattedBalance);
+          const balance = await library.getBalance(account);
+          const formattedBalance = (parseFloat(balance.toString()) / 1e18).toFixed(4);
+          console.log('Updated balance:', formattedBalance, 'ETH');
           setBalance(formattedBalance);
         } catch (error) {
           console.error('Error fetching balance:', error);
-          toast({
-            title: "Error",
-            description: "Failed to fetch balance",
-            variant: "destructive",
-          });
         }
       }
     };
-    
-    getBalance();
-  }, [active, account, chainId]);
 
-  // Effect to handle account changes
+    fetchBalance();
+  }, [active, account, library]);
+
+  // Effect to handle wallet events
   useEffect(() => {
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', (accounts: string[]) => {
@@ -80,11 +58,12 @@ function WalletStatus() {
         }
       });
 
-      window.ethereum.on('chainChanged', (chainId: string) => {
-        console.log('Chain changed:', chainId);
+      window.ethereum.on('chainChanged', () => {
+        console.log('Chain changed, reloading...');
         window.location.reload();
       });
 
+      // Cleanup listeners
       return () => {
         window.ethereum.removeListener('accountsChanged', () => {});
         window.ethereum.removeListener('chainChanged', () => {});
@@ -93,33 +72,38 @@ function WalletStatus() {
   }, []);
 
   const connectWallet = async () => {
+    if (isConnecting) return;
+    
+    setIsConnecting(true);
     try {
       await activate(injected);
-      console.log('Wallet connected successfully');
+      console.log('Wallet connection initiated');
       toast({
-        title: "Wallet Connected",
-        description: "Your wallet has been successfully connected!",
+        title: "Connecting Wallet",
+        description: "Please approve the connection in your wallet",
       });
     } catch (error) {
-      console.error('Error connecting wallet:', error);
+      console.error('Connection error:', error);
       toast({
         title: "Connection Failed",
         description: "Failed to connect wallet. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsConnecting(false);
     }
   };
 
   const disconnectWallet = () => {
     try {
       deactivate();
-      console.log('Wallet disconnected successfully');
+      console.log('Wallet disconnected');
       toast({
         title: "Wallet Disconnected",
         description: "Your wallet has been disconnected.",
       });
     } catch (error) {
-      console.error('Error disconnecting wallet:', error);
+      console.error('Disconnect error:', error);
       toast({
         title: "Error",
         description: "Failed to disconnect wallet",
@@ -127,6 +111,8 @@ function WalletStatus() {
       });
     }
   };
+
+  console.log('Wallet connection state:', { active, account, balance });
 
   if (!window.ethereum) {
     return (
@@ -168,7 +154,7 @@ function WalletStatus() {
             </div>
             <div className="text-sm">
               <span className="font-semibold">Balance:</span>
-              <span className="ml-2 text-gray-600">{balance}</span>
+              <span className="ml-2 text-gray-600">{balance} ETH</span>
             </div>
           </div>
         )}
@@ -177,8 +163,9 @@ function WalletStatus() {
           onClick={active ? disconnectWallet : connectWallet}
           variant={active ? "destructive" : "default"}
           className="w-full"
+          disabled={isConnecting}
         >
-          {active ? 'Disconnect Wallet' : 'Connect Wallet'}
+          {isConnecting ? 'Connecting...' : active ? 'Disconnect Wallet' : 'Connect Wallet'}
         </Button>
       </div>
     </Card>
