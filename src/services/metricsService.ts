@@ -31,7 +31,7 @@ export const metricsService = {
   // Production Metrics
   async getProductionMetrics(): Promise<ProductionMetric[]> {
     try {
-      const result = await sql<ProductionMetric[]>`
+      const result = await sql`
         SELECT * FROM production_metrics 
         ORDER BY timestamp DESC 
         LIMIT 100
@@ -70,7 +70,7 @@ export const metricsService = {
   // Machine Status
   async getMachineStatus(): Promise<MachineStatus[]> {
     try {
-      const result = await sql<MachineStatus[]>`
+      const result = await sql`
         SELECT * FROM machine_status 
         ORDER BY timestamp DESC 
         LIMIT 100
@@ -118,7 +118,7 @@ export const metricsService = {
   // Maintenance Records
   async getMaintenanceRecords(): Promise<MaintenanceRecord[]> {
     try {
-      const result = await sql<MaintenanceRecord[]>`
+      const result = await sql`
         SELECT * FROM maintenance_records 
         ORDER BY date DESC
       `;
