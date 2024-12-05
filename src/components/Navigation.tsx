@@ -8,15 +8,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 
 const Navigation = () => {
@@ -46,39 +37,27 @@ const Navigation = () => {
           <ChevronLeft className="h-5 w-5" />
         </Button>
 
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger className="bg-background">Pages</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-background">
-                  {menuItems.map((item) => (
-                    <li key={item.path}>
-                      <NavigationMenuLink asChild>
-                        <Button
-                          variant="ghost"
-                          className={cn(
-                            "w-full justify-start",
-                            location.pathname === item.path && "bg-accent"
-                          )}
-                          onClick={() => navigate(item.path)}
-                        >
-                          {item.icon}
-                          {item.name}
-                        </Button>
-                      </NavigationMenuLink>
-                    </li>
-                  ))}
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+        <nav className="hidden md:flex items-center gap-4">
+          {menuItems.map((item) => (
+            <Button
+              key={item.path}
+              variant="ghost"
+              className={cn(
+                "hover:bg-secondary",
+                location.pathname === item.path && "bg-accent"
+              )}
+              onClick={() => navigate(item.path)}
+            >
+              {item.icon}
+              {item.name}
+            </Button>
+          ))}
+        </nav>
       </div>
 
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="hover:bg-secondary">
+          <Button variant="ghost" size="icon" className="md:hidden hover:bg-secondary">
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
