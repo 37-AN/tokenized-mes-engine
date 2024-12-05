@@ -11,10 +11,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { sql } from "@/lib/db";
 import { Machine } from "@/services/machineService";
+import { aiService } from "@/utils/aiService";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface ConfigureMachineDialogProps {
   machine: Machine;
@@ -26,7 +29,51 @@ export function ConfigureMachineDialog({ machine, onMachineUpdated }: ConfigureM
   const [name, setName] = useState(machine.name);
   const [status, setStatus] = useState(machine.status);
   const [maintenanceStatus, setMaintenanceStatus] = useState(machine.maintenance_status);
+  const [aiInsights, setAiInsights] = useState<any>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const analyzeWithAI = async () => {
+      try {
+        const [anomalyResult, maintenancePrediction] = await Promise.all([
+          aiService.detectAnomalies({
+            performance: 85,
+            temperature: 72,
+            vibration: 0.15,
+            power_usage: 4.2
+          }),
+          aiService.predictMaintenance({
+            status: machine.status,
+            lastMaintenance: '2024-01-01',
+            runtime: 2160,
+            performanceTrend: 'stable'
+          })
+        ]);
+
+        setAiInsights({ anomalyResult, maintenancePrediction });
+        console.log('AI analysis completed:', { anomalyResult, maintenancePrediction });
+
+        if (anomalyResult.isAnomaly) {
+          toast({
+            title: "Anomaly Detected",
+            description: anomalyResult.details,
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error('Error during AI analysis:', error);
+        toast({
+          title: "AI Analysis Error",
+          description: "Failed to perform AI analysis",
+          variant: "destructive",
+        });
+      }
+    };
+
+    if (open) {
+      analyzeWithAI();
+    }
+  }, [open, machine.status, toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,6 +119,30 @@ export function ConfigureMachineDialog({ machine, onMachineUpdated }: ConfigureM
             Update the configuration settings for this machine.
           </DialogDescription>
         </DialogHeader>
+        
+        {aiInsights?.anomalyResult?.isAnomaly && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Anomaly Detected</AlertTitle>
+            <AlertDescription>
+              {aiInsights.anomalyResult.details}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {aiInsights?.maintenancePrediction && (
+          <Alert className="mb-4">
+            <AlertTitle>Maintenance Prediction</AlertTitle>
+            <AlertDescription>
+              Next maintenance recommended by: {new Date(aiInsights.maintenancePrediction.nextMaintenanceDate).toLocaleDateString()}
+              <br />
+              Urgency: {aiInsights.maintenancePrediction.urgency}
+              <br />
+              Confidence: {(aiInsights.maintenancePrediction.confidence * 100).toFixed(1)}%
+            </AlertDescription>
+          </Alert>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Machine Name</Label>
