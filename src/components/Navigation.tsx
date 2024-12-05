@@ -18,6 +18,7 @@ const Navigation = () => {
     { name: "Production Metrics", path: "/production-metrics" },
     { name: "Active Products", path: "/active-products" },
     { name: "System Status", path: "/system-status" },
+    { name: "Database Records", path: "/database" },
   ];
 
   console.log("Navigation component rendered");

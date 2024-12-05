@@ -11,6 +11,7 @@ import MachineSetup from "./pages/MachineSetup";
 import ProductionManagement from "./pages/ProductionManagement";
 import AnalyticsView from "./pages/AnalyticsView";
 import MachineAnalysis from "./pages/MachineAnalysis";
+import DatabaseView from "./pages/DatabaseView";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/production-management" element={<ProductionManagement />} />
           <Route path="/analytics" element={<AnalyticsView />} />
           <Route path="/machine-analysis" element={<MachineAnalysis />} />
+          <Route path="/database" element={<DatabaseView />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
