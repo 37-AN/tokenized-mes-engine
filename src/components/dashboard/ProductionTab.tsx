@@ -36,6 +36,22 @@ const ProductionTab = () => {
           </div>
         </Card>
       </Link>
+
+      <Link to="/database">
+        <Card className="p-6 glass-card hover-scale">
+          <div className="flex items-start space-x-4">
+            <div className="p-2 rounded-lg bg-primary/5">
+              <Database className="w-6 h-6 text-primary" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold mb-1">Database Records</h3>
+              <p className="text-sm text-muted-foreground">
+                View and manage database records
+              </p>
+            </div>
+          </div>
+        </Card>
+      </Link>
     </div>
   );
 };
