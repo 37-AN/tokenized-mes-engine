@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Activity, BarChart3, Box, Settings, LineChart, Database, Gauge } from "lucide-react";
+import { Activity, BarChart3, Box, Settings, LineChart, Database, Gauge, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
@@ -19,8 +19,9 @@ const Index = () => {
 
       <main className="max-w-6xl mx-auto">
         <Tabs defaultValue="monitoring" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3 gap-4">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 gap-4">
             <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
+            <TabsTrigger value="alerts">Alerts</TabsTrigger>
             <TabsTrigger value="production">Production</TabsTrigger>
             <TabsTrigger value="management">Management</TabsTrigger>
           </TabsList>
@@ -69,6 +70,26 @@ const Index = () => {
                       <h3 className="font-semibold mb-1">Machine Analysis</h3>
                       <p className="text-sm text-muted-foreground">
                         AI-powered status and maintenance
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              </Link>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="alerts" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Link to="/system-alerts">
+                <Card className="p-6 glass-card hover-scale">
+                  <div className="flex items-start space-x-4">
+                    <div className="p-2 rounded-lg bg-primary/5">
+                      <AlertCircle className="w-6 h-6 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold mb-1">System Alerts</h3>
+                      <p className="text-sm text-muted-foreground">
+                        View and manage system alerts
                       </p>
                     </div>
                   </div>
