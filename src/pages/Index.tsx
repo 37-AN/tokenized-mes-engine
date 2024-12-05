@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Activity, BarChart3, Box, Settings, LineChart, Database } from "lucide-react";
+import { Activity, BarChart3, Box, Settings, LineChart, Database, Gauge } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
@@ -59,16 +59,16 @@ const Index = () => {
                 </Card>
               </Link>
 
-              <Link to="/active-products">
+              <Link to="/machine-analysis">
                 <Card className="p-6 glass-card hover-scale">
                   <div className="flex items-start space-x-4">
                     <div className="p-2 rounded-lg bg-primary/5">
-                      <Box className="w-6 h-6 text-primary" />
+                      <Gauge className="w-6 h-6 text-primary" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold mb-1">Active Products</h3>
+                      <h3 className="font-semibold mb-1">Machine Analysis</h3>
                       <p className="text-sm text-muted-foreground">
-                        Track current production items
+                        AI-powered status and maintenance
                       </p>
                     </div>
                   </div>
