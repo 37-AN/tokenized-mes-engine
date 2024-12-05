@@ -23,12 +23,12 @@ function getLibrary(provider: any): Web3Provider {
 }
 
 function WalletStatus() {
-  const context = useWeb3React<Web3Provider>();
-  const { connector, library, account, activate, deactivate, active, error } = context;
+  const { connector, library, chainId, account, activate, deactivate, active, error } = useWeb3React<Web3Provider>();
   const [balance, setBalance] = useState<string>('0');
   const { toast } = useToast();
 
   useEffect(() => {
+    console.log('Wallet status changed:', { active, account, chainId });
     const getBalance = async () => {
       if (active && account && window.ethereum) {
         try {
@@ -47,7 +47,7 @@ function WalletStatus() {
     };
     
     getBalance();
-  }, [active, account]);
+  }, [active, account, chainId]);
 
   const connectWallet = async () => {
     try {
@@ -83,7 +83,6 @@ function WalletStatus() {
     }
   };
 
-  // If wallet is not detected
   if (!window.ethereum) {
     return (
       <Card className="p-6 max-w-md mx-auto">
