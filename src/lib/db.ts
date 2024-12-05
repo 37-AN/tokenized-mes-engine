@@ -1,6 +1,5 @@
 import { neon } from '@neondatabase/serverless';
 
-// In Vite, environment variables are accessed through import.meta.env
 const DATABASE_URL = import.meta.env.VITE_DATABASE_URL;
 
 if (!DATABASE_URL) {
@@ -17,6 +16,19 @@ export const initDatabase = async () => {
     console.log('Testing database connection...');
     await sql`SELECT 1`; // Test connection
     console.log('Database connection successful');
+
+    // Create machines table first since other tables might reference it
+    console.log('Creating machines table...');
+    await sql`
+      CREATE TABLE IF NOT EXISTS machines (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        status VARCHAR(50) DEFAULT 'Inactive',
+        maintenance_status VARCHAR(50) DEFAULT 'Up to date',
+        token VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
 
     console.log('Creating production_metrics table...');
     await sql`
@@ -95,18 +107,6 @@ export const initDatabase = async () => {
           (CURRENT_TIMESTAMP - INTERVAL '1 day', 'Inspection', '1 hour', 'Mike Brown', 'PENDING')
       `;
     }
-
-    console.log('Creating machines table...');
-    await sql`
-      CREATE TABLE IF NOT EXISTS machines (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        status VARCHAR(50) DEFAULT 'Inactive',
-        maintenance_status VARCHAR(50) DEFAULT 'Up to date',
-        token VARCHAR(255),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `;
 
     console.log('All database tables initialized successfully');
   } catch (error) {

@@ -2,13 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Cog, Server, Wrench } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { generateMachineToken } from "@/utils/tokenization";
 import { useToast } from "@/components/ui/use-toast";
 import Navigation from "@/components/Navigation";
 import { AddMachineDialog } from "@/components/machines/AddMachineDialog";
 import { machineService, type Machine } from "@/services/machineService";
 import { useQuery } from "@tanstack/react-query";
+import { sql } from "@/lib/db";
 
 const MachineSetup = () => {
   const { toast } = useToast();

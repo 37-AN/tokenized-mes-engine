@@ -7,6 +7,7 @@ export interface Machine {
   status: string;
   maintenance_status: string;
   token: string;
+  created_at?: string;
 }
 
 export const machineService = {
@@ -14,19 +15,26 @@ export const machineService = {
     console.log('Adding new machine:', name);
     const token = generateMachineToken(Date.now().toString(), Date.now());
     
-    const result = await sql`
+    const result = await sql<Machine[]>`
       INSERT INTO machines (name, status, maintenance_status, token)
       VALUES (${name}, 'Active', 'Up to date', ${token})
       RETURNING *
     `;
     
+    if (!result || result.length === 0) {
+      throw new Error('Failed to add machine');
+    }
+
     console.log('Machine added successfully:', result[0]);
     return result[0];
   },
 
   async getAllMachines(): Promise<Machine[]> {
     console.log('Fetching all machines');
-    const machines = await sql`SELECT * FROM machines ORDER BY created_at DESC`;
+    const machines = await sql<Machine[]>`
+      SELECT * FROM machines 
+      ORDER BY created_at DESC
+    `;
     console.log('Machines fetched:', machines);
     return machines;
   }
