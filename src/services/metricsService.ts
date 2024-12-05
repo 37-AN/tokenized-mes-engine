@@ -30,13 +30,24 @@ export interface MaintenanceRecord {
 export const metricsService = {
   // Production Metrics
   async getProductionMetrics(): Promise<ProductionMetric[]> {
-    const result = await sql<ProductionMetric[]>`
-      SELECT * FROM production_metrics 
-      ORDER BY timestamp DESC 
-      LIMIT 100
-    `;
-    console.log('Retrieved production metrics:', result);
-    return result;
+    try {
+      const result = await sql<ProductionMetric[]>`
+        SELECT * FROM production_metrics 
+        ORDER BY timestamp DESC 
+        LIMIT 100
+      `;
+      console.log('Retrieved production metrics:', result);
+      return result.map(row => ({
+        timestamp: new Date(row.timestamp),
+        production_count: Number(row.production_count),
+        efficiency: Number(row.efficiency),
+        defects: Number(row.defects),
+        waste: Number(row.waste)
+      }));
+    } catch (error) {
+      console.error('Error fetching production metrics:', error);
+      return [];
+    }
   },
 
   async addProductionMetric(metric: Omit<ProductionMetric, 'timestamp'>): Promise<void> {
@@ -58,13 +69,27 @@ export const metricsService = {
 
   // Machine Status
   async getMachineStatus(): Promise<MachineStatus[]> {
-    const result = await sql<MachineStatus[]>`
-      SELECT * FROM machine_status 
-      ORDER BY timestamp DESC 
-      LIMIT 100
-    `;
-    console.log('Retrieved machine status:', result);
-    return result;
+    try {
+      const result = await sql<MachineStatus[]>`
+        SELECT * FROM machine_status 
+        ORDER BY timestamp DESC 
+        LIMIT 100
+      `;
+      console.log('Retrieved machine status:', result);
+      return result.map(row => ({
+        timestamp: new Date(row.timestamp),
+        machine_id: String(row.machine_id),
+        performance: Number(row.performance),
+        temperature: Number(row.temperature),
+        vibration: Number(row.vibration),
+        power_usage: Number(row.power_usage),
+        pressure: Number(row.pressure),
+        status: String(row.status)
+      }));
+    } catch (error) {
+      console.error('Error fetching machine status:', error);
+      return [];
+    }
   },
 
   async updateMachineStatus(status: Omit<MachineStatus, 'timestamp'>): Promise<void> {
@@ -92,12 +117,23 @@ export const metricsService = {
 
   // Maintenance Records
   async getMaintenanceRecords(): Promise<MaintenanceRecord[]> {
-    const result = await sql<MaintenanceRecord[]>`
-      SELECT * FROM maintenance_records 
-      ORDER BY date DESC
-    `;
-    console.log('Retrieved maintenance records:', result);
-    return result;
+    try {
+      const result = await sql<MaintenanceRecord[]>`
+        SELECT * FROM maintenance_records 
+        ORDER BY date DESC
+      `;
+      console.log('Retrieved maintenance records:', result);
+      return result.map(row => ({
+        date: new Date(row.date),
+        type: String(row.type),
+        duration: String(row.duration),
+        technician: String(row.technician),
+        status: String(row.status)
+      }));
+    } catch (error) {
+      console.error('Error fetching maintenance records:', error);
+      return [];
+    }
   },
 
   async addMaintenanceRecord(record: MaintenanceRecord): Promise<void> {
