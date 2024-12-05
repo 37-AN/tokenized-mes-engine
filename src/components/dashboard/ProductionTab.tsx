@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
-import { Settings, Database } from "lucide-react";
+import { Settings, Database, LineChart } from "lucide-react";
 
 const ProductionTab = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <Link to="/machine-setup">
-        <Card className="p-6 glass-card hover-scale">
+      <Link to="/machine-setup" className="block">
+        <Card className="h-full p-6 glass-card hover-scale">
           <div className="flex items-start space-x-4">
             <div className="p-2 rounded-lg bg-primary/5">
               <Settings className="w-6 h-6 text-primary" />
@@ -21,8 +21,8 @@ const ProductionTab = () => {
         </Card>
       </Link>
 
-      <Link to="/production-management">
-        <Card className="p-6 glass-card hover-scale">
+      <Link to="/production-management" className="block">
+        <Card className="h-full p-6 glass-card hover-scale">
           <div className="flex items-start space-x-4">
             <div className="p-2 rounded-lg bg-primary/5">
               <Database className="w-6 h-6 text-primary" />
@@ -37,11 +37,11 @@ const ProductionTab = () => {
         </Card>
       </Link>
 
-      <Link to="/database-view">
-        <Card className="p-6 glass-card hover-scale">
+      <Link to="/database-view" className="block">
+        <Card className="h-full p-6 glass-card hover-scale">
           <div className="flex items-start space-x-4">
             <div className="p-2 rounded-lg bg-primary/5">
-              <Database className="w-6 h-6 text-primary" />
+              <LineChart className="w-6 h-6 text-primary" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold mb-1">Database Records</h3>
