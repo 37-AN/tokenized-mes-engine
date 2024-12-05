@@ -15,7 +15,7 @@ export const machineService = {
     console.log('Adding new machine:', name);
     const token = generateMachineToken(Date.now().toString(), Date.now());
     
-    const result = await sql<Machine[]>`
+    const result = await sql.unsafe<Machine[]>`
       INSERT INTO machines (name, status, maintenance_status, token)
       VALUES (${name}, 'Active', 'Up to date', ${token})
       RETURNING *
@@ -31,7 +31,7 @@ export const machineService = {
 
   async getAllMachines(): Promise<Machine[]> {
     console.log('Fetching all machines');
-    const machines = await sql<Machine[]>`
+    const machines = await sql.unsafe<Machine[]>`
       SELECT * FROM machines 
       ORDER BY created_at DESC
     `;
