@@ -18,7 +18,7 @@ const Navigation = () => {
     { name: "Production Metrics", path: "/production-metrics" },
     { name: "Active Products", path: "/active-products" },
     { name: "System Status", path: "/system-status" },
-    { name: "Database Records", path: "/database", icon: <Database className="mr-2 h-4 w-4" /> },
+    { name: "Database Records", path: "/database-view", icon: <Database className="mr-2 h-4 w-4" /> },
   ];
 
   console.log("Navigation component rendered");

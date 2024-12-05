@@ -37,7 +37,7 @@ const ProductionTab = () => {
         </Card>
       </Link>
 
-      <Link to="/database">
+      <Link to="/database-view">
         <Card className="p-6 glass-card hover-scale">
           <div className="flex items-start space-x-4">
             <div className="p-2 rounded-lg bg-primary/5">
