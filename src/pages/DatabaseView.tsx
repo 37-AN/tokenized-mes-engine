@@ -12,22 +12,63 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Navigation from "@/components/Navigation";
 import { format } from "date-fns";
+import { useState, useEffect } from "react";
+import { initDatabase } from "@/lib/db";
 
 const DatabaseView = () => {
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [initError, setInitError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        await initDatabase();
+        setIsInitialized(true);
+      } catch (error) {
+        console.error("Failed to initialize database:", error);
+        setInitError(error instanceof Error ? error.message : "Unknown error occurred");
+      }
+    };
+    initialize();
+  }, []);
+
   const productionMetrics = useQuery({
     queryKey: ["productionMetrics"],
     queryFn: metricsService.getProductionMetrics,
+    enabled: isInitialized,
   });
 
   const machineStatus = useQuery({
     queryKey: ["machineStatus"],
     queryFn: metricsService.getMachineStatus,
+    enabled: isInitialized,
   });
 
   const maintenanceRecords = useQuery({
     queryKey: ["maintenanceRecords"],
     queryFn: metricsService.getMaintenanceRecords,
+    enabled: isInitialized,
   });
+
+  if (initError) {
+    return (
+      <div className="container mx-auto p-6">
+        <Navigation />
+        <div className="text-red-500">
+          Error initializing database: {initError}
+        </div>
+      </div>
+    );
+  }
+
+  if (!isInitialized) {
+    return (
+      <div className="container mx-auto p-6">
+        <Navigation />
+        <div>Initializing database...</div>
+      </div>
+    );
+  }
 
   console.log("Database view queries:", {
     productionMetrics: productionMetrics.data,
