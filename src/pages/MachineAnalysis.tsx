@@ -1,12 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area } from 'recharts';
 import { useState } from "react";
-import { Activity, AlertTriangle, Thermometer, Timer, Wrench, Battery, Cpu, Gauge } from "lucide-react";
 import Navigation from "@/components/Navigation";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { PerformanceMetrics } from "@/components/machine-analysis/PerformanceMetrics";
+import { AnomalyDetection } from "@/components/machine-analysis/AnomalyDetection";
+import { PredictiveMaintenance } from "@/components/machine-analysis/PredictiveMaintenance";
 
 const MachineAnalysis = () => {
   const [analyzing, setAnalyzing] = useState(false);
@@ -27,6 +25,14 @@ const MachineAnalysis = () => {
     { date: '2024-02-15', type: 'Scheduled', duration: '3h', technician: 'Sarah Wilson', status: 'Pending' },
   ];
 
+  const healthMetrics = {
+    performance: 92,
+    temperature: 72,
+    vibration: 0.5,
+    power: 95,
+    pressure: 78
+  };
+
   const runDiagnostic = () => {
     setAnalyzing(true);
     toast.info("Starting diagnostic analysis...");
@@ -35,14 +41,6 @@ const MachineAnalysis = () => {
       setAnalyzing(false);
       toast.success("Diagnostic analysis completed successfully");
     }, 2000);
-  };
-
-  const healthMetrics = {
-    performance: 92,
-    temperature: 72,
-    vibration: 0.5,
-    power: 95,
-    pressure: 78
   };
 
   console.log("Rendering MachineAnalysis with enhanced data:", { performanceData, maintenanceHistory, healthMetrics });
@@ -65,159 +63,12 @@ const MachineAnalysis = () => {
       </header>
       
       <div className="grid md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Performance Metrics</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={performanceData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="time" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="performance" stroke="#2563eb" name="Performance %" />
-                  <Line type="monotone" dataKey="temperature" stroke="#dc2626" name="Temperature °F" />
-                  <Line type="monotone" dataKey="vibration" stroke="#eab308" name="Vibration" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Resource Consumption</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={performanceData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="time" />
-                  <YAxis />
-                  <Tooltip />
-                  <Area type="monotone" dataKey="power" stroke="#2563eb" fill="#2563eb33" name="Power Usage" />
-                  <Area type="monotone" dataKey="pressure" stroke="#22c55e" fill="#22c55e33" name="Pressure" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Real-time Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-green-50 dark:bg-green-900/20">
-                  <Activity className="h-5 w-5 text-green-600" />
-                  <div>
-                    <p className="text-sm font-medium">Status</p>
-                    <p className="text-2xl font-bold text-green-600">Operational</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20">
-                  <Thermometer className="h-5 w-5 text-blue-600" />
-                  <div>
-                    <p className="text-sm font-medium">Temperature</p>
-                    <p className="text-2xl font-bold text-blue-600">{healthMetrics.temperature}°F</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20">
-                  <Timer className="h-5 w-5 text-yellow-600" />
-                  <div>
-                    <p className="text-sm font-medium">Uptime</p>
-                    <p className="text-2xl font-bold text-yellow-600">98.5%</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20">
-                  <Battery className="h-5 w-5 text-purple-600" />
-                  <div>
-                    <p className="text-sm font-medium">Load</p>
-                    <p className="text-2xl font-bold text-purple-600">75%</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-indigo-50 dark:bg-indigo-900/20">
-                  <Gauge className="h-5 w-5 text-indigo-600" />
-                  <div>
-                    <p className="text-sm font-medium">Pressure</p>
-                    <p className="text-2xl font-bold text-indigo-600">{healthMetrics.pressure} PSI</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-rose-50 dark:bg-rose-900/20">
-                  <Cpu className="h-5 w-5 text-rose-600" />
-                  <div>
-                    <p className="text-sm font-medium">CPU Usage</p>
-                    <p className="text-2xl font-bold text-rose-600">65%</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Health Score</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex flex-col items-center justify-center p-6">
-                <div className="text-6xl font-bold text-primary mb-2">92</div>
-                <Badge variant="secondary" className="text-lg">Excellent</Badge>
-                <p className="text-muted-foreground mt-2">Based on current performance metrics</p>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-                  <p className="text-sm text-muted-foreground">Efficiency</p>
-                  <p className="text-xl font-semibold">95%</p>
-                </div>
-                <div className="text-center p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-                  <p className="text-sm text-muted-foreground">Reliability</p>
-                  <p className="text-xl font-semibold">89%</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="col-span-full">
-          <CardHeader>
-            <CardTitle>Maintenance History</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Duration</TableHead>
-                  <TableHead>Technician</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {maintenanceHistory.map((record, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{record.date}</TableCell>
-                    <TableCell>{record.type}</TableCell>
-                    <TableCell>{record.duration}</TableCell>
-                    <TableCell>{record.technician}</TableCell>
-                    <TableCell>
-                      <Badge variant={record.status === 'Completed' ? 'default' : 'secondary'}>
-                        {record.status}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+        <AnomalyDetection healthMetrics={healthMetrics} />
+        <PerformanceMetrics performanceData={performanceData} />
+        <PredictiveMaintenance 
+          maintenanceHistory={maintenanceHistory}
+          healthMetrics={healthMetrics}
+        />
       </div>
     </div>
   );
