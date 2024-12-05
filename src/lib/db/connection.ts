@@ -8,10 +8,13 @@ if (!DATABASE_URL) {
 
 console.log('Attempting to connect to database with URL:', DATABASE_URL);
 
+let sql;
 try {
-  export const sql = neon(DATABASE_URL);
+  sql = neon(DATABASE_URL);
   console.log('Database connection initialized successfully');
 } catch (error) {
   console.error('Failed to initialize database connection:', error);
   throw error;
 }
+
+export { sql };
