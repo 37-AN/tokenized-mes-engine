@@ -62,13 +62,15 @@ const MachineAnalysis = () => {
         </Button>
       </header>
       
-      <div className="grid md:grid-cols-2 gap-6">
-        <AnomalyDetection healthMetrics={healthMetrics} />
+      <div className="grid gap-6">
+        <div className="grid md:grid-cols-2 gap-6">
+          <AnomalyDetection healthMetrics={healthMetrics} />
+          <PredictiveMaintenance 
+            maintenanceHistory={maintenanceHistory}
+            healthMetrics={healthMetrics}
+          />
+        </div>
         <PerformanceMetrics performanceData={performanceData} />
-        <PredictiveMaintenance 
-          maintenanceHistory={maintenanceHistory}
-          healthMetrics={healthMetrics}
-        />
       </div>
     </div>
   );
