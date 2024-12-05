@@ -9,7 +9,7 @@ export const PerformanceMetrics = ({ performanceData }: PerformanceMetricsProps)
   console.log('Rendering PerformanceMetrics with data:', performanceData);
 
   return (
-    <Card className="w-full max-w-[1200px] mx-auto">
+    <Card className="w-[95vw] max-w-[2000px] mx-auto">
       <CardHeader className="pb-4">
         <CardTitle className="text-2xl">Performance Metrics</CardTitle>
       </CardHeader>
