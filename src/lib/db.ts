@@ -1,13 +1,13 @@
 import { neon } from '@neondatabase/serverless';
-import { config } from 'dotenv';
 
-config();
+// In Vite, environment variables are accessed through import.meta.env
+const DATABASE_URL = import.meta.env.VITE_DATABASE_URL;
 
-if (!process.env.DATABASE_URL) {
-  console.error('DATABASE_URL is not defined in environment variables');
+if (!DATABASE_URL) {
+  console.error('VITE_DATABASE_URL is not defined in environment variables');
 }
 
-export const sql = neon(process.env.DATABASE_URL!);
+export const sql = neon(DATABASE_URL!);
 
 // Initialize database tables
 export const initDatabase = async () => {
