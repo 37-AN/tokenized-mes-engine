@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect } from "react";
 import Index from "./pages/Index";
 import ProductionMetrics from "./pages/ProductionMetrics";
 import MachineAnalysis from "./pages/MachineAnalysis";
@@ -10,12 +11,20 @@ import MachineSetup from "./pages/MachineSetup";
 import AnalyticsView from "./pages/AnalyticsView";
 import ActiveProducts from "./pages/ActiveProducts";
 import SystemAlerts from "./pages/SystemAlerts";
+import { initDatabase } from "./lib/db";
 import "./App.css";
 
 // Create a client
 const queryClient = new QueryClient();
 
 function App() {
+  useEffect(() => {
+    console.log("Initializing database...");
+    initDatabase()
+      .then(() => console.log("Database initialized successfully"))
+      .catch((error) => console.error("Failed to initialize database:", error));
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
