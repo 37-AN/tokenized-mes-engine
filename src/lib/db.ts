@@ -4,14 +4,20 @@ import { neon } from '@neondatabase/serverless';
 const DATABASE_URL = import.meta.env.VITE_DATABASE_URL;
 
 if (!DATABASE_URL) {
-  console.error('VITE_DATABASE_URL is not defined in environment variables');
+  throw new Error('VITE_DATABASE_URL is not defined in environment variables');
 }
 
-export const sql = neon(DATABASE_URL!);
+console.log('Attempting to connect to database...');
+
+export const sql = neon(DATABASE_URL);
 
 // Initialize database tables
 export const initDatabase = async () => {
   try {
+    console.log('Testing database connection...');
+    await sql`SELECT 1`; // Test connection
+    console.log('Database connection successful');
+
     console.log('Creating production_metrics table...');
     await sql`
       CREATE TABLE IF NOT EXISTS production_metrics (
@@ -69,7 +75,7 @@ export const initDatabase = async () => {
     await sql`
       CREATE TABLE IF NOT EXISTS maintenance_records (
         id SERIAL PRIMARY KEY,
-        date TIMESTAMP,
+        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         type VARCHAR(50),
         duration VARCHAR(20),
         technician VARCHAR(100),
@@ -92,7 +98,13 @@ export const initDatabase = async () => {
     
     console.log('All database tables initialized successfully');
   } catch (error) {
-    console.error('Error initializing database:', error);
+    console.error('Database initialization error:', error);
+    if (error instanceof Error) {
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+      });
+    }
     throw error;
   }
 };
