@@ -12,6 +12,7 @@ export const sql = neon(DATABASE_URL!);
 // Initialize database tables
 export const initDatabase = async () => {
   try {
+    console.log('Creating production_metrics table...');
     await sql`
       CREATE TABLE IF NOT EXISTS production_metrics (
         id SERIAL PRIMARY KEY,
@@ -20,8 +21,11 @@ export const initDatabase = async () => {
         efficiency FLOAT,
         defects INTEGER,
         waste FLOAT
-      );
+      )
+    `;
 
+    console.log('Creating machine_status table...');
+    await sql`
       CREATE TABLE IF NOT EXISTS machine_status (
         id SERIAL PRIMARY KEY,
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -32,8 +36,11 @@ export const initDatabase = async () => {
         power_usage FLOAT,
         pressure FLOAT,
         status VARCHAR(50)
-      );
+      )
+    `;
 
+    console.log('Creating maintenance_records table...');
+    await sql`
       CREATE TABLE IF NOT EXISTS maintenance_records (
         id SERIAL PRIMARY KEY,
         date TIMESTAMP,
@@ -41,10 +48,12 @@ export const initDatabase = async () => {
         duration VARCHAR(20),
         technician VARCHAR(100),
         status VARCHAR(50)
-      );
+      )
     `;
-    console.log('Database tables initialized successfully');
+    
+    console.log('All database tables initialized successfully');
   } catch (error) {
     console.error('Error initializing database:', error);
+    throw error; // Re-throw the error so we can handle it in the App component
   }
 };
