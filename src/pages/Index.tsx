@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card";
 import DashboardAnalytics from "@/components/dashboard/DashboardAnalytics";
 import MonitoringTab from "@/components/dashboard/MonitoringTab";
 import ProductionTab from "@/components/dashboard/ProductionTab";
-import ManagementTab from "@/components/dashboard/ManagementTab";
 import AppSidebar from "@/components/AppSidebar";
 import ConnectionStatus from "@/components/status/ConnectionStatus";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
@@ -44,10 +43,6 @@ export default function Index() {
 
             <section className="space-y-4 md:space-y-6">
               <ProductionTab />
-            </section>
-
-            <section className="space-y-4 md:space-y-6">
-              <ManagementTab />
             </section>
           </div>
         </SidebarInset>
