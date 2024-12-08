@@ -2,15 +2,32 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, AlertTriangle, Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const ConnectionStatus = () => {
   const [refineryConnection, setRefineryConnection] = useState<'connected' | 'disconnected' | 'checking'>('checking');
   const [lastDataReceived, setLastDataReceived] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     const checkConnections = async () => {
       try {
         console.log('Checking connection status...');
+        
+        // First, verify Supabase connection
+        const { error: healthCheckError } = await supabase.from('refined_industrial_data').select('count').limit(1);
+        if (healthCheckError) {
+          console.error('Supabase connection error:', healthCheckError);
+          toast({
+            title: "Connection Error",
+            description: "Unable to connect to the database. Please check your configuration.",
+            variant: "destructive",
+          });
+          setRefineryConnection('disconnected');
+          return;
+        }
+
+        // Then check for recent data
         const { data, error } = await supabase
           .from('refined_industrial_data')
           .select('timestamp')
@@ -19,32 +36,56 @@ const ConnectionStatus = () => {
 
         if (error) {
           console.error('Error checking refinery connection:', error);
+          toast({
+            title: "Data Fetch Error",
+            description: error.message,
+            variant: "destructive",
+          });
           setRefineryConnection('disconnected');
           return;
         }
+
+        console.log('Query result:', data);
 
         if (data && data.length > 0) {
           const lastTimestamp = new Date(data[0].timestamp);
           const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
           
           setLastDataReceived(lastTimestamp.toLocaleString());
-          setRefineryConnection(lastTimestamp > fiveMinutesAgo ? 'connected' : 'disconnected');
-          console.log('Connection status updated:', lastTimestamp > fiveMinutesAgo ? 'connected' : 'disconnected');
+          const isConnected = lastTimestamp > fiveMinutesAgo;
+          setRefineryConnection(isConnected ? 'connected' : 'disconnected');
+          console.log('Connection status updated:', isConnected ? 'connected' : 'disconnected');
+          console.log('Last timestamp:', lastTimestamp);
+          console.log('Five minutes ago:', fiveMinutesAgo);
         } else {
           setRefineryConnection('disconnected');
-          console.log('No data found, connection status: disconnected');
+          console.log('No data found in refined_industrial_data table');
+          toast({
+            title: "No Data",
+            description: "No data has been received from the refinery yet.",
+            variant: "warning",
+          });
         }
       } catch (error) {
-        console.error('Error in checkConnections:', error);
+        console.error('Unexpected error in checkConnections:', error);
+        toast({
+          title: "Connection Error",
+          description: "An unexpected error occurred while checking the connection.",
+          variant: "destructive",
+        });
         setRefineryConnection('disconnected');
       }
     };
 
+    // Initial check
     checkConnections();
-    const interval = setInterval(checkConnections, 30000); // Check every 30 seconds
+    
+    // Set up interval for periodic checks
+    const interval = setInterval(checkConnections, 30000);
 
+    // Cleanup interval on component unmount
     return () => clearInterval(interval);
-  }, []);
+  }, [toast]);
 
   return (
     <Card className="hover-scale">
