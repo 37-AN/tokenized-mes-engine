@@ -6,6 +6,7 @@ import MonitoringTab from "@/components/dashboard/MonitoringTab";
 import ProductionTab from "@/components/dashboard/ProductionTab";
 import ManagementTab from "@/components/dashboard/ManagementTab";
 import AppSidebar from "@/components/AppSidebar";
+import ConnectionStatus from "@/components/status/ConnectionStatus";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
 export default function Index() {
@@ -27,6 +28,10 @@ export default function Index() {
                   <TokenInteraction />
                 </Card>
               </div>
+            </section>
+
+            <section>
+              <ConnectionStatus />
             </section>
 
             <section>
