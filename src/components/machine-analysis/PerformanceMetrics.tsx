@@ -8,7 +8,23 @@ interface PerformanceMetricsProps {
   performanceData: any[];
 }
 
-const fetchRefinedData = async () => {
+interface RefinedDataMetadata {
+  temperature?: number;
+  vibration?: number;
+  [key: string]: any;
+}
+
+interface RefinedDataItem {
+  id: string;
+  device_id: string | null;
+  data_type: string;
+  value: number;
+  quality_score: number | null;
+  timestamp: string;
+  metadata: RefinedDataMetadata | null;
+}
+
+const fetchRefinedData = async (): Promise<RefinedDataItem[]> => {
   console.log('Fetching refined industrial data...');
   const { data, error } = await supabase
     .from('refined_industrial_data')
@@ -46,8 +62,8 @@ export const PerformanceMetrics = ({ performanceData }: PerformanceMetricsProps)
   const chartData = refinedData?.map(item => ({
     time: new Date(item.timestamp).toLocaleTimeString(),
     performance: item.value,
-    temperature: item.metadata?.temperature || 0,
-    vibration: item.metadata?.vibration || 0
+    temperature: item.metadata?.temperature ?? 0,
+    vibration: item.metadata?.vibration ?? 0
   })) || performanceData;
 
   console.log('Rendering PerformanceMetrics with processed data:', chartData);
