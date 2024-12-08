@@ -63,7 +63,7 @@ const ConnectionStatus = () => {
           toast({
             title: "No Data",
             description: "No data has been received from the refinery yet.",
-            variant: "warning",
+            variant: "default",  // Changed from "warning" to "default"
           });
         }
       } catch (error) {
