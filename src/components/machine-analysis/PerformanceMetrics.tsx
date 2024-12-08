@@ -3,28 +3,13 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { RefinedIndustrialData } from "@/integrations/supabase/types/refined-data";
 
 interface PerformanceMetricsProps {
   performanceData: any[];
 }
 
-interface RefinedDataMetadata {
-  temperature?: number;
-  vibration?: number;
-  [key: string]: any;
-}
-
-interface RefinedDataItem {
-  id: string;
-  device_id: string | null;
-  data_type: string;
-  value: number;
-  quality_score: number | null;
-  timestamp: string;
-  metadata: RefinedDataMetadata | null;
-}
-
-const fetchRefinedData = async (): Promise<RefinedDataItem[]> => {
+const fetchRefinedData = async (): Promise<RefinedIndustrialData[]> => {
   console.log('Fetching refined industrial data...');
   const { data, error } = await supabase
     .from('refined_industrial_data')

@@ -1,3 +1,9 @@
+export interface RefinedDataMetadata {
+  temperature?: number;
+  vibration?: number;
+  [key: string]: any;
+}
+
 export interface RefinedIndustrialData {
   id: string;
   device_id: string;
