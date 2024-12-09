@@ -1,3 +1,5 @@
+import { Json } from './database.types';
+
 export interface RefinedDataMetadata {
   temperature?: number;
   vibration?: number;
@@ -11,7 +13,7 @@ export interface RefinedIndustrialData {
   value: number;
   quality_score: number | null;
   timestamp: string;
-  metadata: Record<string, any> | null;
+  metadata: Json | null;
 }
 
 export interface MesMetric {
@@ -21,7 +23,7 @@ export interface MesMetric {
   value: number;
   unit: string | null;
   timestamp: string;
-  metadata: Record<string, any> | null;
+  metadata: Json | null;
 }
 
 export interface AiInsight {
@@ -30,7 +32,7 @@ export interface AiInsight {
   insight_type: string;
   message: string;
   confidence: number | null;
-  metadata: Record<string, any> | null;
+  metadata: Json | null;
   created_at: string;
   severity: string | null;
 }

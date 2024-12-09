@@ -15,7 +15,8 @@ const fetchRefinedData = async (): Promise<RefinedIndustrialData[]> => {
     .from('refined_industrial_data')
     .select('*')
     .order('timestamp', { ascending: true })
-    .limit(100);
+    .limit(100)
+    .returns<RefinedIndustrialData[]>();
 
   if (error) {
     console.error('Error fetching refined data:', error);
