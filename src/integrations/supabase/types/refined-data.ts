@@ -13,7 +13,7 @@ export interface RefinedIndustrialData {
   value: number;
   quality_score: number | null;
   timestamp: string;
-  metadata: Json | null;
+  metadata: RefinedDataMetadata | null;
 }
 
 export interface MesMetric {
