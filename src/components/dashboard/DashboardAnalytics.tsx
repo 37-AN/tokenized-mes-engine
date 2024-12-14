@@ -1,11 +1,28 @@
-import { Activity, TrendingUp, Users, AlertTriangle } from "lucide-react";
+import { Activity, TrendingUp, Users, AlertTriangle, BarChart3 } from "lucide-react";
 import DashboardMetricCard from "./metrics/DashboardMetricCard";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const DashboardAnalytics = () => {
+  const { data: mesData } = useQuery({
+    queryKey: ['mesMetrics'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('refined_mes_data')
+        .select('*')
+        .order('timestamp', { ascending: false })
+        .limit(1);
+      
+      if (error) throw error;
+      return data;
+    },
+    refetchInterval: 30000 // Refresh every 30 seconds
+  });
+
   const metrics = [
     {
       title: "Production Rate",
-      value: "98.5%",
+      value: mesData?.[0]?.value?.toFixed(1) + "%" || "98.5%",
       subtitle: "+2% from last month",
       icon: TrendingUp,
     },
@@ -22,6 +39,12 @@ const DashboardAnalytics = () => {
       icon: Users,
     },
     {
+      title: "Quality Score",
+      value: mesData?.[0]?.quality_score?.toFixed(1) + "%" || "99.2%",
+      subtitle: "Above target",
+      icon: BarChart3,
+    },
+    {
       title: "Alerts",
       value: "2",
       subtitle: "Requires attention",
@@ -30,7 +53,7 @@ const DashboardAnalytics = () => {
   ];
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
       {metrics.map((metric) => (
         <DashboardMetricCard
           key={metric.title}
