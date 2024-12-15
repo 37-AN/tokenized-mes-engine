@@ -1,12 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { CheckCircle, XCircle, AlertTriangle } from "lucide-react";
+import { CheckCircle, XCircle, AlertTriangle, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { metricsService } from "@/services/metricsService";
 
 const QualityControl = () => {
-  const { data: metrics, isLoading } = useQuery({
+  const { data: metrics, isLoading, error } = useQuery({
     queryKey: ['productionMetrics'],
     queryFn: metricsService.getProductionMetrics,
     refetchInterval: 30000,
@@ -20,13 +20,46 @@ const QualityControl = () => {
     return { color: "text-red-500", label: "Critical" };
   };
 
-  if (isLoading) {
-    return <div>Loading quality data...</div>;
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <Card className="p-6">
+          <CardContent>
+            <div className="text-red-500 flex flex-col items-center gap-2">
+              <XCircle className="h-8 w-8" />
+              <p>Error loading quality metrics</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
-  const defectRate = metrics?.[0] ? 
-    (metrics[0].defects / metrics[0].production_count) * 100 : 0;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <Card className="p-6">
+          <CardContent>
+            <div className="flex flex-col items-center gap-2">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p>Loading quality metrics...</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
+  // Provide default metrics if no data is available
+  const defaultMetrics = [{
+    timestamp: new Date().toISOString(),
+    defects: 0,
+    production_count: 100,
+    waste: 0
+  }];
+
+  const currentMetrics = metrics?.[0] || defaultMetrics[0];
+  const defectRate = (currentMetrics.defects / currentMetrics.production_count) * 100;
   const status = getQualityStatus(defectRate);
 
   return (
@@ -57,7 +90,7 @@ const QualityControl = () => {
               {defectRate.toFixed(1)}%
             </div>
             <div className="text-sm text-muted-foreground mt-2">
-              {metrics?.[0]?.defects || 0} defects detected
+              {currentMetrics.defects} defects detected
             </div>
           </CardContent>
         </Card>
@@ -69,7 +102,7 @@ const QualityControl = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {metrics?.[0]?.waste || 0}%
+              {currentMetrics.waste}%
             </div>
             <div className="text-sm text-muted-foreground mt-2">
               Target: &lt;3%
@@ -85,7 +118,7 @@ const QualityControl = () => {
         <CardContent>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={metrics}>
+              <BarChart data={metrics || defaultMetrics}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                   dataKey="timestamp" 
