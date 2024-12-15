@@ -18,9 +18,36 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    // Simulate refinery data (in a real scenario, this would come from your actual refinery system)
+    // First, get or create a PLC device for our simulated data
+    let device;
+    const { data: existingDevice } = await supabase
+      .from('plc_devices')
+      .select('id')
+      .eq('name', 'AI Refinery Simulator')
+      .single();
+
+    if (!existingDevice) {
+      const { data: newDevice, error: deviceError } = await supabase
+        .from('plc_devices')
+        .insert({
+          name: 'AI Refinery Simulator',
+          description: 'Simulated refinery device for testing',
+          protocol: 'simulation'
+        })
+        .select()
+        .single();
+
+      if (deviceError) throw deviceError;
+      device = newDevice;
+      console.log('Created new PLC device:', device);
+    } else {
+      device = existingDevice;
+      console.log('Using existing PLC device:', device);
+    }
+
+    // Simulate refinery data with the valid device ID
     const refineryData = {
-      device_id: "sim-001",
+      device_id: device.id,
       data_type: "temperature",
       value: Math.random() * 100,
       quality_score: 0.95,
@@ -31,11 +58,11 @@ serve(async (req) => {
     const { data, error } = await supabase
       .from('refined_industrial_data')
       .insert([refineryData])
-      .select()
+      .select();
 
-    if (error) throw error
+    if (error) throw error;
 
-    console.log('Successfully inserted refinery data:', data)
+    console.log('Successfully inserted refinery data:', data);
 
     return new Response(
       JSON.stringify({ success: true, data }),
@@ -45,7 +72,7 @@ serve(async (req) => {
       }
     )
   } catch (error) {
-    console.error('Error in refinery-connection function:', error)
+    console.error('Error in refinery-connection function:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
       { 
