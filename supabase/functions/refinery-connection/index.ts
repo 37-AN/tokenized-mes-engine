@@ -32,12 +32,16 @@ serve(async (req) => {
         .insert({
           name: 'AI Refinery Simulator',
           description: 'Simulated refinery device for testing',
-          protocol: 'simulation'
+          protocol: 'modbus', // Changed from 'simulation' to 'modbus'
+          is_active: true
         })
         .select()
         .single();
 
-      if (deviceError) throw deviceError;
+      if (deviceError) {
+        console.error('Error creating device:', deviceError);
+        throw deviceError;
+      }
       device = newDevice;
       console.log('Created new PLC device:', device);
     } else {
@@ -60,7 +64,10 @@ serve(async (req) => {
       .insert([refineryData])
       .select();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error inserting refinery data:', error);
+      throw error;
+    }
 
     console.log('Successfully inserted refinery data:', data);
 
