@@ -14,20 +14,21 @@ const ConnectionStatus = () => {
       try {
         console.log('Checking connection status...');
         
-        // First, verify Supabase connection
-        const { error: healthCheckError } = await supabase.from('refined_industrial_data').select('count').limit(1);
-        if (healthCheckError) {
-          console.error('Supabase connection error:', healthCheckError);
+        // Call the refinery-connection function to simulate/get data
+        const { data: functionData, error: functionError } = await supabase.functions.invoke('refinery-connection');
+        
+        if (functionError) {
+          console.error('Edge function error:', functionError);
           toast({
             title: "Connection Error",
-            description: "Unable to connect to the database. Please check your configuration.",
+            description: "Unable to connect to the refinery. Please check your configuration.",
             variant: "destructive",
           });
           setRefineryConnection('disconnected');
           return;
         }
 
-        // Then check for recent data
+        // Check for recent data
         const { data, error } = await supabase
           .from('refined_industrial_data')
           .select('timestamp')
@@ -63,7 +64,7 @@ const ConnectionStatus = () => {
           toast({
             title: "No Data",
             description: "No data has been received from the refinery yet.",
-            variant: "default",  // Changed from "warning" to "default"
+            variant: "default",
           });
         }
       } catch (error) {
