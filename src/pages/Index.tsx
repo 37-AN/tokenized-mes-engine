@@ -16,6 +16,11 @@ export default function Index() {
         <AppSidebar />
         <SidebarInset className="flex-1 p-4 md:p-8 bg-gradient-to-b from-gray-50 to-gray-100">
           <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
+            <section>
+              <h2 className="text-2xl font-bold tracking-tight mb-4">System Status</h2>
+              <ConnectionStatus />
+            </section>
+
             <section className="space-y-4 md:space-y-6">
               <div className="grid gap-4 md:gap-8 md:grid-cols-2">
                 <Card className="p-4 md:p-6 shadow-lg hover:shadow-xl transition-shadow">
@@ -28,10 +33,6 @@ export default function Index() {
                   <TokenInteraction />
                 </Card>
               </div>
-            </section>
-
-            <section>
-              <ConnectionStatus />
             </section>
 
             <section>
