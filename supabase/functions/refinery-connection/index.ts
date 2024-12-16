@@ -20,9 +20,42 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    // Simulate refinery data
+    // First, get or create a PLC device for our simulated data
+    let device;
+    const { data: existingDevice, error: queryError } = await supabase
+      .from('plc_devices')
+      .select('id')
+      .eq('name', 'AI Refinery Simulator')
+      .single();
+
+    console.log('Existing device query result:', existingDevice, queryError);
+
+    if (!existingDevice) {
+      const { data: newDevice, error: deviceError } = await supabase
+        .from('plc_devices')
+        .insert({
+          name: 'AI Refinery Simulator',
+          description: 'Simulated refinery device for testing',
+          protocol: 'modbus',
+          is_active: true
+        })
+        .select()
+        .single();
+
+      if (deviceError) {
+        console.error('Error creating device:', deviceError);
+        throw deviceError;
+      }
+      device = newDevice;
+      console.log('Created new PLC device:', device);
+    } else {
+      device = existingDevice;
+      console.log('Using existing PLC device:', device);
+    }
+
+    // Now use the device.id (which is a proper UUID) for the refined data
     const refineryData = {
-      device_id: 'dev-1',
+      device_id: device.id, // This will be a valid UUID
       data_type: "temperature",
       value: Math.random() * 100,
       quality_score: 0.95,
