@@ -91,7 +91,7 @@ const ConnectionStatus = () => {
   return (
     <Card className="hover-scale">
       <CardHeader>
-        <CardTitle className="text-xl">Project Integration Status</CardTitle>
+        <CardTitle className="text-xl">AI Refinery</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
