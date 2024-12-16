@@ -14,14 +14,30 @@ const ConnectionStatus = () => {
       try {
         console.log('Checking connection status...');
         
-        // Call the refinery-connection function to simulate/get data
-        const { data: functionData, error: functionError } = await supabase.functions.invoke('refinery-connection');
+        // First check if we can connect to Supabase
+        const { data: healthCheck, error: healthError } = await supabase.from('refined_industrial_data').select('count(*)', { count: 'exact' });
+        
+        if (healthError) {
+          console.error('Database connection error:', healthError);
+          toast({
+            title: "Database Connection Error",
+            description: "Unable to connect to the database. Please check your configuration.",
+            variant: "destructive",
+          });
+          setRefineryConnection('disconnected');
+          return;
+        }
+
+        // Call the refinery-connection function
+        const { data: functionData, error: functionError } = await supabase.functions.invoke('refinery-connection', {
+          body: { action: 'check-connection' }
+        });
         
         if (functionError) {
           console.error('Edge function error:', functionError);
           toast({
             title: "Connection Error",
-            description: "Unable to connect to the refinery. Please check your configuration.",
+            description: "Unable to connect to the refinery service. Please try again later.",
             variant: "destructive",
           });
           setRefineryConnection('disconnected');
@@ -59,11 +75,11 @@ const ConnectionStatus = () => {
           console.log('Last timestamp:', lastTimestamp);
           console.log('Five minutes ago:', fiveMinutesAgo);
         } else {
-          setRefineryConnection('disconnected');
           console.log('No data found in refined_industrial_data table');
+          setRefineryConnection('connected'); // Set to connected even if no data, as the connection itself works
           toast({
-            title: "No Data",
-            description: "No data has been received from the refinery yet.",
+            title: "Connection Active",
+            description: "Connected to the refinery service. Waiting for initial data.",
             variant: "default",
           });
         }
@@ -110,8 +126,8 @@ const ConnectionStatus = () => {
                 <h3 className="font-semibold">AI Industry Refinery Connection</h3>
                 <p className="text-sm text-muted-foreground">
                   {refineryConnection === 'checking' ? 'Checking connection...' :
-                   refineryConnection === 'connected' ? 'Connected and receiving data' :
-                   'No recent data received'}
+                   refineryConnection === 'connected' ? 'Connected and ready' :
+                   'Connection issue detected'}
                 </p>
                 {lastDataReceived && (
                   <p className="text-xs text-muted-foreground mt-1">
