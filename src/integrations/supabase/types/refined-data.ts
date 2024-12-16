@@ -24,6 +24,7 @@ export interface MesMetric {
   unit: string | null;
   timestamp: string;
   metadata: Json | null;
+  quality_score?: number | null; // Added this property
 }
 
 export interface AiInsight {

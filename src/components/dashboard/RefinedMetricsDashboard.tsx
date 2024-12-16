@@ -44,7 +44,6 @@ const RefinedMetricsDashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Latest MES Metrics */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader>
@@ -66,7 +65,7 @@ const RefinedMetricsDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {latestMesMetric?.quality_score?.toFixed(1) || 'N/A'}
+              {latestMesMetric?.quality_score?.toFixed(1) ?? 'N/A'}
             </div>
             <p className="text-sm text-muted-foreground">Target: 95%</p>
           </CardContent>
@@ -85,7 +84,6 @@ const RefinedMetricsDashboard = () => {
         </Card>
       </div>
 
-      {/* Latest AI Insight */}
       {latestInsight && (
         <Alert variant={latestInsight.severity === 'warning' ? 'destructive' : 'default'}>
           <AlertTriangle className="h-4 w-4" />
@@ -101,7 +99,6 @@ const RefinedMetricsDashboard = () => {
         </Alert>
       )}
 
-      {/* Metrics Chart */}
       <Card>
         <CardHeader>
           <CardTitle>Performance Trends</CardTitle>
