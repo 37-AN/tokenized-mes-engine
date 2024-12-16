@@ -5,6 +5,7 @@ import DashboardAnalytics from "@/components/dashboard/DashboardAnalytics";
 import MonitoringTab from "@/components/dashboard/MonitoringTab";
 import ProductionTab from "@/components/dashboard/ProductionTab";
 import MesDataTab from "@/components/dashboard/MesDataTab";
+import RefinedMetricsDashboard from "@/components/dashboard/RefinedMetricsDashboard";
 import AppSidebar from "@/components/AppSidebar";
 import ConnectionStatus from "@/components/status/ConnectionStatus";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
@@ -33,6 +34,11 @@ export default function Index() {
                   <TokenInteraction />
                 </Card>
               </div>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold tracking-tight mb-4">Refined MES Metrics</h2>
+              <RefinedMetricsDashboard />
             </section>
 
             <section>
