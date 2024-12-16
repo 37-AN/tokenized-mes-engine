@@ -13,45 +13,16 @@ serve(async (req) => {
   }
 
   try {
+    console.log('Refinery connection function called');
+    
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    // First, get or create a PLC device for our simulated data
-    let device;
-    const { data: existingDevice } = await supabase
-      .from('plc_devices')
-      .select('id')
-      .eq('name', 'AI Refinery Simulator')
-      .single();
-
-    if (!existingDevice) {
-      const { data: newDevice, error: deviceError } = await supabase
-        .from('plc_devices')
-        .insert({
-          name: 'AI Refinery Simulator',
-          description: 'Simulated refinery device for testing',
-          protocol: 'modbus', // Changed from 'simulation' to 'modbus'
-          is_active: true
-        })
-        .select()
-        .single();
-
-      if (deviceError) {
-        console.error('Error creating device:', deviceError);
-        throw deviceError;
-      }
-      device = newDevice;
-      console.log('Created new PLC device:', device);
-    } else {
-      device = existingDevice;
-      console.log('Using existing PLC device:', device);
-    }
-
-    // Simulate refinery data with the valid device ID
+    // Simulate refinery data
     const refineryData = {
-      device_id: device.id,
+      device_id: 'dev-1',
       data_type: "temperature",
       value: Math.random() * 100,
       quality_score: 0.95,
